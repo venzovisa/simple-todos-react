@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "user": "Ivan",
+    "avatar": "/logo.svg",
+    "todo": "Todo text goes here"
+  },
+  {
+    "id": 2,
+    "user": "Peter",
+    "avatar": "/logo.svg",
+    "todo": "Todo text goes here"
+  },
+  {
+    "id": 3,
+    "user": "George",
+    "avatar": "/logo.svg",
+    "todo": "Todo text goes here"
+  }
+]
