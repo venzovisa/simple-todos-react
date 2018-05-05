@@ -16,20 +16,11 @@ class Button extends Component {
         ));
     }
 
-    componentDidMount(){
-        console.log("componentDidMount")
-    }
-
-    componentWillUnmount(){
-        console.log("componentWillUnmount")
-    }
-
-    componentDidUpdate(){
-        console.log("componentDidUpdate")
-    }
+    componentDidMount(){}
+    componentWillUnmount(){}
+    componentDidUpdate(){}
 
     render(){
-        console.log(this.state);
         return (
             <div>
                 <button onClick={this.updateCount.bind(this)}>

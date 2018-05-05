@@ -20,10 +20,12 @@ body {
 }
 .todoNav {
   text-align: right;}
-.textarea {
+textarea {
+  min-height: 150px;
+  width: 100%;
   resize: none;
 }
-.textarea:disabled {
+textarea:disabled {
   border: none;
   background: none;
 }
