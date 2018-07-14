@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import Avatar from "../Avatar/Avatar";
-import Text from "../Text/Text";
 import User from "../User/User";
 import { Row, Col } from "reactstrap";
 
@@ -9,17 +8,18 @@ class Todo extends Component {
         super(props);
         this.item = props.item;
         this.onItemClick = props.onItemClick;
-        this.handleSubmit = this.handleSubmit.bind(this);
+        this.onClickEdit = this.onClickEdit.bind(this);
+        this.onEditText = this.props.onEditText;
         this.onItemClickHandler = this.onItemClickHandler.bind(this);
     }
-    updateCount(){
-        this.setState((prevState, props) => (
-            {
-                count: prevState.count + 1,
-                number: this.state.number + this.properties.increment
-            }
-        ));
-    }
+    // updateCount(){
+    //     this.setState((prevState, props) => (
+    //         {
+    //             count: prevState.count + 1,
+    //             number: this.state.number + this.properties.increment
+    //         }
+    //     ));
+    // }
 
     onItemClickHandler(){
         this.props.onItemClick(this.props.item.id);
@@ -29,26 +29,27 @@ class Todo extends Component {
     componentWillUnmount(){}
     componentDidUpdate(){}
 
-    handleSubmit(e){
-        e.preventDefault();
+
+    onClickEdit(e){
+        //document.getElementById(this.item.id).disabled = !document.getElementById(this.item.id).disabled;
+        this.props.onEditText(e.target.value);
     }
 
     render(){
         return (
-            <Col xs="12" key={this.item.id} className="listItem">
-                <Row>
+                <Row className="listItem">
                     <Col xs="12" sm="3">
                         <Avatar src={this.item.avatar !== null ? this.item.avatar : "/noavatar.png"}/>
                         <User user={this.item.user}/>
                     </Col>
                     <Col xs="12" sm="9" className="todoContent">
-                        <Text todo={this.item.todo} id={this.item.id}/>
+                            <textarea disabled id={this.item.id} defaultValue={this.item.todo}></textarea>
+                            <button onClick={this.onClickEdit} value={"This is button value"}>Edit</button>
                     </Col>
                     <Col xs="12" className="todoNav" >
 
                     </Col>
                 </Row>
-            </Col>
         );
     }
 }

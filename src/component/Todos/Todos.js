@@ -1,15 +1,20 @@
 import React from 'react'
 import { Component } from 'react'
 import Todo from "../Todo/Todo";
-import { Button, Row, Col } from 'reactstrap';
+import { Row, Col } from 'reactstrap';
 
-const TextAreaValidation = props => (<div className="alert alert-danger">Warning! Too short. Min value is 10 letters or more.</div>)
+//const TextAreaValidation = props => (<div className="alert alert-danger">Warning! Too short. Min value is 10 letters or more.</div>)
+//{this.handleSubmit === true ? <TextAreaValidation />: ""}
 
 class Todos extends Component {
     constructor(props){
         super(props);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.inputHandler = this.inputHandler.bind(this);
+        //this.onEditText = this.onEditText.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.newName = "newName";
         this.state = {
             data: [
                 {
@@ -32,49 +37,67 @@ class Todos extends Component {
                     "password": "1234",
                     "avatar": null,
                     "todo": "Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old."
+                },
+                {
+                    "id": 4,
+                    "user": "Harry",
+                    "password": "1234",
+                    "avatar": null,
+                    "todo": "Its good to be here"
                 }
             ],
-            formName: "",
-            formPassword:"",
-            formTodo:""
+            formName: '',
+            formPassword: '',
+            formTodo: '',
+            deleteByName: ''
         }
     }
 
 
-    updateCount(){
-        this.setState((prevState, props) => (
-            {
-                count: prevState.count + 1,
-                number: this.state.number + this.properties.increment
-            }
-        ));
-    }
+    // updateCount(){
+    //     this.setState((prevState, props) => (
+    //         {
+    //             count: prevState.count + 1,
+    //             number: this.state.number + this.properties.increment
+    //         }
+    //     ));
+    // }
     componentDidMount(){
-        console.log("componentDidMount")
+       // console.log("componentDidMount")
     }
     componentWillUnmount(){
-        console.log("componentWillUnmount")
+       // console.log("componentWillUnmount")
     }
     componentDidUpdate(){
-        console.log("componentDidUpdate")
+       // console.log("componentDidUpdate");
     }
 
+    // onEditText(){
+    //     let newData = this.state.data.slice();
+    //     newData[0].todo1 = "Sample text";
+    //     console.log(newData);
+    //     this.setState(prevData => ({
+    //         prevData: newData
+    //     }));
+    //     console.log(this.state.data);
+    // }
+
     renderItem(item, id){
-        return <Col xs="12" key={id}>
-                <Todo item={item}/>
-            </Col>
+        return <Todo key={id} item={item} onEditText={this.onEditText}/>
     }
 
     inputHandler(e){
         // Passing input value via input name attribute
         this.setState({[e.target.name]: e.target.value});
+        console.log(this.state.deleteByName);
     }
 
     handleSubmit(event){
         // add new ID via last item
         event.preventDefault();
         console.log("Form submitted");
-        let newID = this.state.data[this.state.data.length-1].id+1;
+        let dataLength = this.state.data.length;
+        let newID = dataLength > 0 ? this.state.data[dataLength-1].id+1 : 1;
         let newItem= {
             "id": newID,
             "user": this.state.formName,
@@ -82,13 +105,43 @@ class Todos extends Component {
             "avatar": null,
             "todo": this.state.formTodo
         };
-        if (this.state.formTodo.length < 10) {return true}
+        //console.log(newItem);
+        if (this.state.formTodo.length < 10) {console.log ("Too short!")}
         else {
-            this.setState({data: this.state.data.concat(newItem)});
+            this.setState((prevState) => ({data: prevState.data.slice().concat(newItem)}));
         }
-       console.log(this.state.data);
-       console.log("data length " + this.state.data.length);
-       console.log(event);
+
+       //console.log(this.state.data);
+       //console.log("data length " + this.state.data.length);
+       //console.log(event);
+    }
+
+    handleEdit(e) {
+        e.preventDefault();
+        this.setState(function(prevState) {
+            let newState = prevState.data.slice();
+            newState.shift();
+            //newState.data.map((v, i) => {
+        //         if (v.user === "Venzo") v.user ="Kremena";
+        // });
+            //console.log(newState.data);
+            return {data: newState}
+        });
+        //console.log(this.state.data);
+    }
+
+    handleDelete(e) {
+        e.preventDefault();
+        this.setState(function(prevState) {
+            let newState = prevState.data.slice();
+            let filteredData = newState.filter(element =>  element.user.toLowerCase() !== this.state.deleteByName);
+            console.log(filteredData);
+            //newState.data.map((v, i) => {
+            //         if (v.user === "Venzo") v.user ="Kremena";
+            // });
+            //console.log(newState.data);
+            return {data: filteredData}
+        });
     }
 
     render(){
@@ -101,12 +154,17 @@ class Todos extends Component {
                         <textarea name="formTodo" onChange={this.inputHandler} value={this.state.formTodo}/>
                         <input type="submit" value="ADD" className="btn btn-primary" />
                     </form>
-                    {this.handleSubmit === true ? <TextAreaValidation /> : ""}
+                    <form onSubmit={this.handleEdit} className="form-control">
+                        <input placeholder="Name" type="text" name="formName" onChange={this.inputHandler} value={this.state.formName} />
+                        <input type="submit" value="EDIT" className="btn btn-primary" />
+                    </form>
+                    <form onSubmit={this.handleDelete} className="form-control">
+                        <input placeholder="Name" type="text" name="deleteByName" onChange={this.inputHandler} value={this.state.deleteByName} />
+                        <input type="submit" value="DELETE" className="btn btn-primary" />
+                    </form>
                 </Col>
                 <Col xs="12">
-                    <Row>
                         {this.state.data.map((value, index) => this.renderItem(value, index))}
-                    </Row>
                 </Col>
             </Row>
         );
